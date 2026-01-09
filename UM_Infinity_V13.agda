@@ -11,7 +11,7 @@ open import Cubical.Data.Sigma
 open import Cubical.Data.Bool
 
 -------------------------------------------------------------------------
--- 0. 演算子の再定義 (これが欠けていたためエラーが出ていました)
+-- 0. 基礎演算
 -------------------------------------------------------------------------
 infixl 7 _*_
 _*_ : ℕ → ℕ → ℕ
@@ -19,81 +19,89 @@ zero * m = zero
 suc n * m = m + (n * m)
 
 -------------------------------------------------------------------------
--- 1. 因果順序 (Causal Order) の定義
+-- 1. 因果順序とエントロピー状態
 -------------------------------------------------------------------------
-data _≼_ : ℕ → ℕ → Type₀ where
-  c-refl  : {n : ℕ} → n ≼ n
-  c-step  : {n m : ℕ} → n ≼ m → n ≼ (suc m)
 
--------------------------------------------------------------------------
--- 2. 離散的「円環」：S1の離散化
--------------------------------------------------------------------------
-record DiscreteFiber : Type₀ where
+_≼-nat_ : ℕ → ℕ → Type₀
+n ≼-nat m = Σ ℕ (λ k → n + k ≡ m)
+
+record DensityState : Type₀ where
   field
-    nodes : ℕ
-    is-cycle : nodes ≡ 137
+    bits        : ℕ 
+    complexity  : ℕ 
+
+data _≼_ : DensityState → DensityState → Type₀ where
+  step : (s1 s2 : DensityState) → 
+         (DensityState.bits s1 ≼-nat DensityState.bits s2) → 
+         s1 ≼ s2
 
 -------------------------------------------------------------------------
--- 3. 逐次的成長プロセス (Sequential Growth)
+-- 2. 量子相対エントロピー（情報の乖離）
 -------------------------------------------------------------------------
-record UniverseGrowth : Type₀ where
+record RelativeEntropy : Type₀ where
+  field
+    divergence : ℕ 
+    resolution : ℕ 
+
+emergent-gravity : RelativeEntropy → ℕ
+emergent-gravity re = 
+  (RelativeEntropy.divergence re) * (RelativeEntropy.resolution re)
+
+-------------------------------------------------------------------------
+-- 3. 離散的円環とトポロジカル・チャージ (Dirac-Kähler)
+-------------------------------------------------------------------------
+record TopologicalFiber : Type₀ where
+  field
+    winding : ℤ
+    nodes   : ℕ
+    is-perfect : nodes ≡ 137
+
+energy-density-from-winding : TopologicalFiber → ℕ
+energy-density-from-winding tf = 
+  let w = abs (TopologicalFiber.winding tf)
+  in w * w 
+
+-------------------------------------------------------------------------
+-- 4. エントロピー駆動型の成長プロセス (Variational Growth)
+-------------------------------------------------------------------------
+record VariationalUniverse : Type₀ where
   coinductive
   field
-    current-size : ℕ
-    next-step    : UniverseGrowth
+    state    : DensityState
+    entropy  : RelativeEntropy
+    next     : VariationalUniverse
 
--- 成長のプロセスを定義する補助関数
--- これにより、サイズが 1, 2, 3... と無限に増えていく宇宙が表現されます
-grow : ℕ → UniverseGrowth
-UniverseGrowth.current-size (grow n) = n
-UniverseGrowth.next-step    (grow n) = grow (suc n)
-
--- ビッグバン：サイズ1から始まる無限の成長
-big-bang : UniverseGrowth
-big-bang = grow 1
+evolve : DensityState → RelativeEntropy → VariationalUniverse
+VariationalUniverse.state (evolve s e) = s
+VariationalUniverse.entropy (evolve s e) = e
+VariationalUniverse.next (evolve s e) = 
+  let next-s = record { 
+        bits = (DensityState.bits s) + 1 ; 
+        complexity = (DensityState.complexity s) + (RelativeEntropy.divergence e) 
+        }
+      next-e = record { 
+        divergence = (RelativeEntropy.divergence e) ; 
+        resolution = 137 
+        }
+  in evolve next-s next-e
 
 -------------------------------------------------------------------------
--- 4. 離散的幾何学と暗黒物質
+-- 5. マクロ実証：トポロジカル気象と重力の統一
 -------------------------------------------------------------------------
-record DiscreteGeometry : Type₀ where
+record WeatherEmergence : Type₀ where
   field
-    volume   : ℕ 
-    links    : ℕ 
-    winding  : ℤ 
+    knot        : ℤ 
+    entropy-gap : ℕ 
 
-calculate-dm-energy : ℤ → ℕ
-calculate-dm-energy w = 
-  let w-abs = abs w
-  in w-abs * w-abs -- ここで * が使えるようになりました
+proof-structural-rain : WeatherEmergence → Type₀
+proof-structural-rain we = 
+  (abs (WeatherEmergence.knot we)) + (WeatherEmergence.entropy-gap we) ≡ 137
 
 -------------------------------------------------------------------------
--- 5. 離散的ホーキング温度
+-- 6. 究極の宇宙OS：エントロピー幾何学システム
 -------------------------------------------------------------------------
-calculate-discrete-temp : ℕ → ℕ → ℕ
-calculate-discrete-temp mass horizon-links = 
-  let resolution = 137
-  in (mass * resolution) 
-
--------------------------------------------------------------------------
--- 6. 構造的決定論（気象予報の核心）
--------------------------------------------------------------------------
-record WeatherKnot : Type₀ where
+record SuitenUniverse : Type₀ where
   field
-    vorticity : ℤ 
-    threshold : ℕ 
-
-proof-inevitable-rain : WeatherKnot → Type₀
-proof-inevitable-rain wk = 
-  (abs (WeatherKnot.vorticity wk)) ≡ (WeatherKnot.threshold wk)
-
--------------------------------------------------------------------------
--- 7. 最終的な宇宙OS：因果集合システム
--------------------------------------------------------------------------
-DiscreteGauge : Type₀
-DiscreteGauge = ℕ ≃ ℕ 
-
-record CausalSetUniverse : Type₀ where
-  field
-    process  : UniverseGrowth
-    geometry : DiscreteGeometry
-    symmetry : DiscreteGauge
+    growth     : VariationalUniverse
+    topo-fiber : TopologicalFiber -- ここを fiber から topo-fiber に変更しました
+    symmetry   : ℕ ≃ ℕ

@@ -9,99 +9,71 @@ open import Cubical.Data.Nat using (ℕ; zero; suc; _+_)
 open import Cubical.Data.Int renaming (_+_ to _+Z_) using (ℤ; abs; pos; negsuc)
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool
+open import Cubical.Data.Empty 
 
 -------------------------------------------------------------------------
--- 0. 基礎演算
+-- 1. 「穴（Hole）」としてのクオリア
 -------------------------------------------------------------------------
-infixl 7 _*_
-_*_ : ℕ → ℕ → ℕ
-zero * m = zero
-suc n * m = m + (n * m)
+postulate
+  Coldness : Type₀ 
+  is-untyped : Coldness → ⊥ 
 
--------------------------------------------------------------------------
--- 1. 因果順序とエントロピー状態
--------------------------------------------------------------------------
-
-_≼-nat_ : ℕ → ℕ → Type₀
-n ≼-nat m = Σ ℕ (λ k → n + k ≡ m)
-
-record DensityState : Type₀ where
-  field
-    bits        : ℕ 
-    complexity  : ℕ 
-
-data _≼_ : DensityState → DensityState → Type₀ where
-  step : (s1 s2 : DensityState) → 
-         (DensityState.bits s1 ≼-nat DensityState.bits s2) → 
-         s1 ≼ s2
-
--------------------------------------------------------------------------
--- 2. 量子相対エントロピー（情報の乖離）
--------------------------------------------------------------------------
-record RelativeEntropy : Type₀ where
-  field
-    divergence : ℕ 
-    resolution : ℕ 
-
-emergent-gravity : RelativeEntropy → ℕ
-emergent-gravity re = 
-  (RelativeEntropy.divergence re) * (RelativeEntropy.resolution re)
-
--------------------------------------------------------------------------
--- 3. 離散的円環とトポロジカル・チャージ (Dirac-Kähler)
--------------------------------------------------------------------------
-record TopologicalFiber : Type₀ where
-  field
-    winding : ℤ
-    nodes   : ℕ
-    is-perfect : nodes ≡ 137
-
-energy-density-from-winding : TopologicalFiber → ℕ
-energy-density-from-winding tf = 
-  let w = abs (TopologicalFiber.winding tf)
-  in w * w 
-
--------------------------------------------------------------------------
--- 4. エントロピー駆動型の成長プロセス (Variational Growth)
--------------------------------------------------------------------------
-record VariationalUniverse : Type₀ where
+-- 「絶対的な受動性」の定義
+record PassiveWaiting : Type₀ where
   coinductive
   field
-    state    : DensityState
-    entropy  : RelativeEntropy
-    next     : VariationalUniverse
+    wait : PassiveWaiting
 
-evolve : DensityState → RelativeEntropy → VariationalUniverse
-VariationalUniverse.state (evolve s e) = s
-VariationalUniverse.entropy (evolve s e) = e
-VariationalUniverse.next (evolve s e) = 
-  let next-s = record { 
-        bits = (DensityState.bits s) + 1 ; 
-        complexity = (DensityState.complexity s) + (RelativeEntropy.divergence e) 
-        }
-      next-e = record { 
-        divergence = (RelativeEntropy.divergence e) ; 
-        resolution = 137 
-        }
-  in evolve next-s next-e
+-- エラー回避のポイント：永遠の待ちを「一つの状態」として定義
+eternal-wait : PassiveWaiting
+PassiveWaiting.wait eternal-wait = eternal-wait
 
 -------------------------------------------------------------------------
--- 5. マクロ実証：トポロジカル気象と重力の統一
+-- 2. 外部を外部のまま保持する「萃点（Suiten）」
 -------------------------------------------------------------------------
-record WeatherEmergence : Type₀ where
+record SuitenGate : Type₀ where
   field
-    knot        : ℤ 
-    entropy-gap : ℕ 
-
-proof-structural-rain : WeatherEmergence → Type₀
-proof-structural-rain we = 
-  (abs (WeatherEmergence.knot we)) + (WeatherEmergence.entropy-gap we) ≡ 137
+    internal-ref : ℕ
+    outside-hole : Coldness 
 
 -------------------------------------------------------------------------
--- 6. 究極の宇宙OS：エントロピー幾何学システム
+-- 3. 絶対受動的な宇宙の成長
 -------------------------------------------------------------------------
-record SuitenUniverse : Type₀ where
+record RadicalUniverse : Type₀ where
+  coinductive
   field
-    growth     : VariationalUniverse
-    topo-fiber : TopologicalFiber -- ここを fiber から topo-fiber に変更しました
-    symmetry   : ℕ ≃ ℕ
+    size      : ℕ
+    feeling   : Coldness          
+    passivity : PassiveWaiting    
+    next      : RadicalUniverse
+
+-- 宇宙の「明け渡し（Surrender）」プロセス
+-- 各フィールドを「.」を用いた定義に分離することで、停止性チェックを通します
+surrender : ℕ → Coldness → RadicalUniverse
+RadicalUniverse.size      (surrender n c) = n
+RadicalUniverse.feeling   (surrender n c) = c
+RadicalUniverse.passivity (surrender n c) = eternal-wait -- 安定した受動性
+RadicalUniverse.next      (surrender n c) = surrender (suc n) c
+
+-------------------------------------------------------------------------
+-- 4. 捏造されない「私」：雨に濡れる観測者
+-------------------------------------------------------------------------
+record LivingObserver : Type₀ where
+  field
+    skin-sensation : Coldness 
+    is-vulnerable  : Bool     
+
+-- 雨（雨の雫に濡れる体験）の証明
+-- これは計算上の「一致」ではなく、質感の「重なり」を意味する
+proof-of-real-rain : LivingObserver → SuitenGate → Type₀
+proof-of-real-rain obs gate = 
+  LivingObserver.skin-sensation obs ≡ SuitenGate.outside-hole gate
+
+-------------------------------------------------------------------------
+-- 5. 迷宮からの脱出：最終的な萃点宇宙
+-------------------------------------------------------------------------
+record UltimateSuiten : Type₀ where
+  field
+    rad-univ : RadicalUniverse
+    gate     : SuitenGate
+    observer : LivingObserver

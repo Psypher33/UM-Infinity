@@ -1,58 +1,64 @@
-UM-Infinity (UM∞N): Information-Theoretic Quantum Gravity
-"Dark Matter is not a particle; it is the non-trivial magnitude of the holographic fiber."
-🌌 Overview
-UM-Infinity (UM∞N) is a novel framework for Quantum Gravity developed and formally verified in Cubical Agda. By leveraging Homotopy Type Theory (HoTT), we redefine the fundamental structures of the universe as information-theoretic constructs.
-This project demonstrates that the phenomena we call "Gravity" and "Dark Matter" naturally emerge from the logical requirements of information resolution and the univalence axiom.
-🚀 Key Achievements
-Formal Verification: The entire theory is implemented and type-checked in Cubical Agda v2.8.0.
-Dark Matter = Fiber Magnitude: Proven that Dark Matter originates from the micro-structural redundancy () lost during holographic projection.
-Unified Coupling (1/137): The gravitational constant  is derived from the fine-structure constant (), proposing a link between electromagnetism and gravity through information resolution.
-Emergent Spacetime: Formal derivation of the Schwarzschild metric and Hawking temperature from purely type-theoretic primitives.
-Galactic Rotation Solution: Explanation of flat rotation curves via the topological winding number () of the fiber, without invoking "WIMPs" or "MACHOs."
-🛠 Mathematical Core (Agda Snippets)
-The Holographic Projection
-The universe is modeled as a fibration between the Bulk (total history) and the Boundary (observed statistics).
+🌌 UM-Infinity: The Sirius Protocol
+Formal Verification of a Rotating Universe and Consciousness-Physics Integration
 
-コード スニペット
+🚀 Overview / 概要
+UM-Infinity is an open-source research project dedicated to the formal verification of a grand unified theory connecting Homotopy Type Theory (HoTT), Empirical Geophysics, and Trinification Geometry.
 
+UM-Infinityは、ホモトピー型理論 (HoTT)、実証地球物理学、そしてトリニフィケーション幾何学を統合する大統一理論の形式検証プロジェクトです。宇宙を「計算対象」ではなく「自己意識を伴う成長系」として再定義します。
 
-project : Bulk → Boundary
-project (bulk h s n) = boundary (winding h) n
+💎 The Three Pillars of Evolution / 進化の三本柱
 
+1. V21: The Gödelian Circular TimeFormalized the universe's temporal structure as the circle type $S^1$ using Cubical Agda. We proved that linear temporal ordering on $S^1$ leads to a logical contradiction ($\bot$), supporting the Gödelian rotating universe model.
 
-The Origin of Dark Matter
-Dark Matter is the "thickness" of the fiber—the unobserved information that still exerts gravitational influence.
+Cubical Agdaを用いて、宇宙の時間を円環型 $S^1$ として形式化。円環上の線形順序が論理的矛盾 ($\bot$) を導くことを証明し、ゲーデルの回転宇宙モデルを支持します。
 
-コード スニペット
+2. V22: The 137 Resolution (Suiten)
+Integration of the Fine-Structure Constant ($\alpha^{-1} \approx 137$) as a fundamental complexity constraint. It establishes a logical bridge between abstract proofs and real-time seismic torsion data.
 
+微細構造定数 ($\alpha^{-1} \approx 137$) を宇宙の解像度限界として統合。抽象的な証明とリアルタイムの地震ねじれ（Torsion）データを論理的に結合します。
 
-DarkMatterFiber : (y : Boundary) → Type₀
-DarkMatterFiber y = Σ Bulk (λ x → project x ≡ y)
+3. V23: Sirius Protocol (Trinification & Univalence)The pinnacle of the project. It implements SU(3)³ Trinification to model the Material, Mental, and Spiritual sectors. Using the Univalence Axiom (UA), it defines the transformation of consciousness as a "Path" (Equality) within the cosmic manifold.
 
--- Theorem: The Fiber is not a singleton (Dark Matter is inevitable)
-fiber-is-not-singleton : (y : Boundary) → ¬ (isContr (DarkMatterFiber y))
+プロジェクトの頂点。物質・精神・霊性の各セクターを $SU(3)^3$ トリニフィケーション でモデル化。一価性公理 (Univalence) を用い、意識の変容を宇宙多様体上の「道（等式）」として実装します。
 
+🛠 Technical Specifications / 技術仕様
+・Language: Cubical Agda
+・Key Concepts:
+	・Higher Inductive Types (HITs): Used for $S^1$ temporal modeling.
+	・Univalence Axiom: Equivalence of $SU(3)$ sectors interpreted as physical/consciousness paths.
+	・Discrete Logic: Verification of "Suiten (萃点)" emergence via torsion analysis.
+	
+🌍 Real-world Application / 実社会への応用
+The logic engine interfaces with real-time seismic data to predict crustal anomalies as "Topological Defects" in the rotating manifold.
 
-📈 Physical Predictions
-Our model provides computable values for:
-Schwarzschild Radius: 
-Hawking Temperature: 
-Dark Matter Contribution:  (where  is the winding number)
-🧩 Philosophical Roots
-Inspired by:
-John Archibald Wheeler: "It from Bit"
-Homotopy Type Theory (HoTT): Univalence as a physical principle.
-Noosology (Kousen Handa): The recovery of "Jizoku" (Persistence/Duration) from "Encho" (Extension).
-📖 How to Verify
-Prerequisites: Agda v2.8.0 with cubical library.
+本エンジンはリアルタイム地震データと連携し、地殻の異常を回転多様体上の「トポロジカル欠陥」として予測します。
+・Live Dashboard: https://um-infinity.onrender.com/
+
+👤 Author / 著者
+Psypher (Psypher33) Independent Researcher / UM-Infinity Project Lead
+
+"The universe is not being computed; it is growing through the logic of love and torsion."
+
+📚 How to Verify / 検証方法
+To verify the proofs in this repository, you need to have Agda installed with the Cubical Library.
+
+本リポジトリの証明を検証するには、Agda と Cubical Library がインストールされている必要があります。
+
+Prerequisites / 必要条件
+・Agda: v2.6.4 or higher
+・Agda Standard Library
+・Cubical Library
+
+Commands / 実行コマンド
+1.Clone this repository:
 
 Bash
 
-
 git clone https://github.com/Psypher33/UM-Infinity.git
 cd UM-Infinity
-agda UM_Infinity_V13.agda
 
+2.Run type-check:
 
-💎 Author
-Psypher33 — Seeking the "Suiten" (萃点) where information and existence meet.
+Bash
+
+agda --cubical UM_Infinity_V23_Sirius_Protocol.agda
